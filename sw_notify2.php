@@ -1,26 +1,23 @@
 <?php
 /*
-Plugin Name: SW_Risk Notify
+Plugin Name: SW_Risk Notify2
 Description: Plugin for detecting risk status
 Author: Linus Teo and Tanya Arora
-Version: 1.0
+Version: 2.1
 */
 
-add_action( 'admin_menu', 'sw_admin_actions2' );
+add_action( 'admin_menu', 'sw_admin_actions99' );
 
 
-function sw_admin_actions2() {
+function sw_admin_actions99() {
 
     add_options_page( 'SW Risk Notify', 'SW Risk Notify', 'manage_options', 'SW Risk Notify' );
 
 }
 
-add_shortcode( "sw_risknotify2", "sw_notify2" );
+add_shortcode( "sw_risknotify99", "sw_notify2" );
 
 add_action( 'sw_notify_risk_events2', 'sw_notify2' );
-function get_current_user_details() {
-    return user_array['username': 'tanya', 'email': 'blah@gmail.com', 'region': 'Ballarat'];
-    }
 
 function sw_notify2() {
     //1. Create empty email array, which will contain "email@gmail.com":"messageContents"
@@ -56,7 +53,7 @@ function sw_notify2() {
 
         //for each email relating to occurrence
         foreach ( $result1 as $row1 ) {
-            $email_array[ $row1->user_email ] .= "{$row1->region} has a MEDIUM risk of <a href= 'http://13.54.13.233/wordpress/index.php/pm-management/'> Powdery Mildew </a> on the date {$rowpm->forecast_date}.<br/>";
+            $email_array[ $row1->user_email ] .= "{$row1->region} has a MEDIUM risk of <a href= 'http://13.54.13.233/wordpress/index.php/pm-management/'> Powdery Mildew </a> on {$rowpm->forecast_day}, {$rowdm->forecast_date}.<br/>";
             }
     }
 
@@ -76,7 +73,7 @@ function sw_notify2() {
 
         //for each email relating to occurrence
         foreach ( $result2 as $row2 ) {
-            $email_array[ $row2->user_email ] .= "{$row2->region} has a MEDIUM risk of <a href='http://13.54.13.233/wordpress/index.php/dm-management/'> Downy Mildew </a> on the date {$rowdm->forecast_date}.<br/>";
+            $email_array[ $row2->user_email ] .= "{$row2->region} has a MEDIUM risk of <a href='http://13.54.13.233/wordpress/index.php/dm-management/'> Downy Mildew </a> on {$rowpm->forecast_day}, {$rowdm->forecast_date}.<br/>";
         }
     }
 
@@ -96,16 +93,16 @@ function sw_notify2() {
 
         //for each email relating to occurrence
         foreach ( $result3 as $row3 ) {
-            $email_array[ $row3->user_email ] .= "{$row3->region} has a MEDIUM risk of <a href='http://13.54.13.233/wordpress/index.php/gm-management/'> Grey Mould </a> on the date {$rowdm->forecast_date}.<br/>";
+            $email_array[ $row3->user_email ] .= "{$row3->region} has a MEDIUM risk of <a href='http://13.54.13.233/wordpress/index.php/gm-management/'> Grey Mould </a> on {$rowpm->forecast_day}, {$rowdm->forecast_date}.<br/>";
         }
     }
 
     foreach ( $email_array as $key => $value ) {
-        send_email( $key, $value );
+        send_email2( $key, $value );
     }
 }
 
-function send_email( $to, $extratext ) {
+function send_email2( $to, $extratext ) {
     $today_date = date( "d-m-Y" );
     $subject    = "Smart Winery Risk Notification: {$today_date}";
     $headers    = array( 'Content-Type: text/html; charset=UTF-8' );
