@@ -38,16 +38,19 @@ function sw_risk_dots() {
 
     echo <<<STYLE
     <style type="text/css">
-        .bubble{
+        div.bubble{
+            display: block;
             white-space: nowrap;
             border-radius: 50%;
+            z-index: 1;
         }   
         
         a.tooltip{
             position: relative;
             text-decoration: none;
             color: blue;
-            
+            opacity: 1;
+            z-index: 1;
         }
         
         a.tooltip span{
@@ -56,8 +59,6 @@ function sw_risk_dots() {
         
         a.tooltip:hover span {
             position: absolute;
-            
-            
             top: 40px;
             display: block;
             border-radius: 5%;
@@ -65,9 +66,7 @@ function sw_risk_dots() {
             background-color: #534190;
             border: 1px solid black;
             padding: 5px;
-            z-index: 10;
-            
-            
+            z-index: 2;
         }
         
         .NONE{ 
@@ -124,35 +123,31 @@ STYLE;
     }
 
     //dont display form
+
+    try {
+        $weatherdb = new wpdb( 'max4monash', 'max4monash', 'weatherdb', 'max4dbinstance.c2a829wujtim.ap-southeast-2.rds.amazonaws.com' );
+    } catch ( Exception $e ) {
+        echo "<p>Error Connecting</p>";
+    }
     if ( is_user_logged_in() && $region ) {
         //render region specific data
         $area_location = $region;
-    } else {
-        render_region_disease_selector();
-    }
-
-    $sql = '';
-
-    if ( $area_location === "" and $disease_name === "" ) {
-        echo "<h3>No region or disease selected.</h3>";
-    } else {
-
-
-        try {
-            $weatherdb = new wpdb( 'max4monash', 'max4monash', 'weatherdb', 'max4dbinstance.c2a829wujtim.ap-southeast-2.rds.amazonaws.com' );
-        } catch ( Exception $e ) {
-            echo "<p>Error Connecting</p>";
-        }
 
         draw_disease_visualisation( 'Downy Mildew', $area_location, $weatherdb );
         draw_disease_visualisation( 'Powdery Mildew', $area_location, $weatherdb );
         draw_disease_visualisation( 'Grey Mould', $area_location, $weatherdb );
-
         draw_risk_legend();
+    } else {
+        render_region_disease_selector();
+        if ( $area_location === "" and $disease_name === "" ) {
+            echo "<h3>No region or disease selected.</h3>";
+        } else {
+            draw_disease_visualisation( $disease_name, $area_location, $weatherdb );
+            draw_risk_legend();
+        }
     }
-
+    echo "<br/>";
     $output = ob_get_clean();
-
     return $output;
 }
 
@@ -242,6 +237,7 @@ function draw_disease_visualisation( $disease_name, $area_location, $weatherdb )
                     echo "<td>";
                     echo "<a href='#' class='tooltip'>";
                     echo "<div class='bubble {$row->risk}'>";
+
                     echo "<span>";
                     echo "Risk: {$row->risk}</br>";
                     echo "Minimum rain: {$row->rain_range_min}mm</br>";
