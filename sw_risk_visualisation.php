@@ -41,32 +41,53 @@ function sw_risk_dots()
     $region = get_current_user_meta('region');
 
 echo <<<STYLE
-    <style>
+    <style type="text/css">
         .bubble{
             display: inline-block;
             white-space: nowrap;
             border-radius: 50%;
         }   
         
-        .popup
-        {
-            visibility: hidden;
-            white-space: nowrap;
-            width: auto;
+        a.tooltip{
             position: relative;
-            z-index:100;
-            text-align: Left;
-            border-radius: 6px;
-            background-color: #696969;
-            color: #fff;
-            padding:3px;
-            top: 50px;    
-            left: 0px;
-        }   
-        .bubble:hover .popup {
-            visibility: visible;
+            text-decoration: none;
             color: blue;
         }
+        
+        a.tooltip span{
+            display: none;
+        }
+        
+        a.tooltip:hover span {
+            position: absolute;
+            top: 40px;
+            display: block;
+            width: 250px;
+            color: black;
+            background-color: #FFFF40;
+            border: 1px solid black;
+            padding: 5px;
+        }
+        
+        /*.popup*/
+        /*{*/
+            /*visibility: hidden;*/
+            /*white-space: nowrap;*/
+            /*width: auto;*/
+            /*position: relative;*/
+            /*z-index:100;*/
+            /*text-align: Left;*/
+            /*border-radius: 6px;*/
+            /*background-color: #696969;*/
+            /*color: #fff;*/
+            /*padding:3px;*/
+            /*top: 50px;    */
+            /*left: 0px;*/
+        /*}   */
+        /*.bubble:hover .popup {*/
+            /*visibility: visible;*/
+            /*color: blue;*/
+        /*}*/
        
         .NONE{ 
             width: 25px;
@@ -218,7 +239,7 @@ function draw_disease_visualisation($disease_name, $area_location, $weatherdb) {
 
     $sql = $sqlbegin . $sqlmiddle . $sqlend;
     $result = $weatherdb->get_results($sql);
-    echo "<h3>Does {$area_location} have <strong>{$disease_name}</strong>?</h3>";
+    echo "<h3>Does {$area_location} have <i>{$disease_name}</i>?</h3>";
 ?>
     <table>
         <tr>
@@ -235,16 +256,18 @@ function draw_disease_visualisation($disease_name, $area_location, $weatherdb) {
             if (is_array($result) || is_object($result)) {
                 foreach ($result as $row) {
                     echo "<td>";
-                    echo "<div class='bubble {$row->risk}'>";
-                    echo "<a href='' rel='tooltip' class='popup'>";
-                    echo "Risk: {$row->risk}</br>";
-                    echo "rain range: {$row->rain_range_min}mm</br>";
-                    echo "rain_max: {$row->rain_range_max}mm</br>";
-                    echo "rain_chance: {$row->rain_chance}%</br>";
-                    echo "air_temp_min: {$row->air_temp_min}°C</br>";
-                    echo "air_temp_max: {$row->air_temp_max}°C";
-                    echo "</span>";
-                    echo "</div>";
+                    echo "<a href='#' class='tooltip'>";
+                        echo "<div class='bubble {$row->risk}'>";
+                            echo "<span>";
+                                echo "Risk: {$row->risk}</br>";
+                                echo "rain range: {$row->rain_range_min}mm</br>";
+                                echo "rain_max: {$row->rain_range_max}mm</br>";
+                                echo "rain_chance: {$row->rain_chance}%</br>";
+                                echo "air_temp_min: {$row->air_temp_min}°C</br>";
+                                echo "air_temp_max: {$row->air_temp_max}°C";
+                            echo "</span>";
+                        echo "</div>";
+                    echo "</a>";
                     echo "</td>";
                 }
             }
