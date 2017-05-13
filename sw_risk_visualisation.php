@@ -67,6 +67,7 @@ echo <<<STYLE
             background-color: #FFFF40;
             border: 1px solid black;
             padding: 5px;
+            z-index: 10;
         }
         
         /*.popup*/
