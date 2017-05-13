@@ -40,7 +40,7 @@
 
 
         //Check powdery mildew
-        $sqlpm = "SELECT area_location, forecast_date FROM vic_disease_analysis WHERE powdery_mildew_risk='HIGH'";
+        $sqlpm = "SELECT area_location, forecast_date, date_format(str_to_date(forecast_date, '%Y-%m-%d'),'%W') as forecast_day FROM vic_disease_analysis WHERE powdery_mildew_risk='HIGH';";
 
         //select all areas of high risk with date and location
         $resultpm = $weatherdbconn->get_results($sqlpm);
@@ -53,12 +53,12 @@
 
             //for each email relating to occurrence
             foreach ($result1 as $row1) {
-                $email_array[$row1->user_email] .= "{$row1->region} has a high risk of <b>Powdery Mildew</b> on the date {$rowpm->forecast_date}.<br/>";
+                $email_array[$row1->user_email] .= "{$row1->region} has a high risk of <b>Powdery Mildew</b> on the {$rowpm->forecast_day},{$rowpm->forecast_date}.<br/>";
             }
         }
 
         //Check downy mildew
-        $sqldm = "SELECT area_location, forecast_date FROM vic_disease_analysis WHERE downy_mildew_risk='HIGH'";
+        $sqldm = "SELECT area_location, forecast_date, date_format(str_to_date(forecast_date, '%Y-%m-%d'),'%W') as forecast_day FROM vic_disease_analysis WHERE downy_mildew_risk='HIGH';";
         //select all areas of high risk with date and location
         $resultdm = $weatherdbconn->get_results($sqldm);
 
@@ -70,12 +70,12 @@
 
             //for each email relating to occurrence
             foreach ($result2 as $row2) {
-                $email_array[$row2->user_email] .= "{$row2->region} has a high risk of <b>Downy Mildew</b> on the date {$rowdm->forecast_date}.<br/>";
+                $email_array[$row2->user_email] .= "{$row2->region} has a high risk of <b>Downy Mildew</b> on the {$rowpm->forecast_day}, {$rowdm->forecast_date}.<br/>";
             }
         }
 
         //Check grey_mould
-        $sqlgm = "SELECT area_location, forecast_date FROM vic_disease_analysis WHERE grey_mould_risk='HIGH'";
+        $sqlgm = "SELECT area_location, forecast_date, date_format(str_to_date(forecast_date, '%Y-%m-%d'),'%W') as forecast_day FROM vic_disease_analysis WHERE grey_mould_risk='HIGH';";
 
         //select all areas of high risk with date and location
         $resultgm = $weatherdbconn->get_results($sqlgm);
@@ -88,7 +88,7 @@
 
             //for each email relating to occurrence
             foreach ($result3 as $row3) {
-                $email_array[$row3->user_email] .= "{$row3->region} has a high risk of <b>Grey Mould</b> on the date {$rowdm->forecast_date}.<br/>";
+                $email_array[$row3->user_email] .= "{$row3->region} has a high risk of <b>Grey Mould</b> on the {$rowpm->forecast_day}, {$rowdm->forecast_date}.<br/>";
             }
         }
 
