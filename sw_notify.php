@@ -53,7 +53,7 @@
 
             //for each email relating to occurrence
             foreach ($result1 as $row1) {
-                $email_array[$row1->user_email] .= "{$row1->region} has a high risk of <b>Powdery Mildew</b> on the {$rowpm->forecast_day},{$rowpm->forecast_date}.<br/>";
+                $email_array[$row1->user_email] .= "{$row1->region} has a high risk of <a href='http://13.54.13.233/wordpress/index.php/pm-management/'> Powdery Mildew </a> on the {$rowpm->forecast_day},{$rowpm->forecast_date}.<br/>";
             }
         }
 
@@ -70,7 +70,7 @@
 
             //for each email relating to occurrence
             foreach ($result2 as $row2) {
-                $email_array[$row2->user_email] .= "{$row2->region} has a high risk of <b>Downy Mildew</b> on the {$rowpm->forecast_day}, {$rowdm->forecast_date}.<br/>";
+                $email_array[$row2->user_email] .= "{$row2->region} has a high risk of <a href='http://13.54.13.233/wordpress/index.php/dm-management/'> Downy Mildew </a> on the {$rowpm->forecast_day}, {$rowdm->forecast_date}.<br/>";
             }
         }
 
@@ -88,7 +88,7 @@
 
             //for each email relating to occurrence
             foreach ($result3 as $row3) {
-                $email_array[$row3->user_email] .= "{$row3->region} has a high risk of <b>Grey Mould</b> on the {$rowpm->forecast_day}, {$rowdm->forecast_date}.<br/>";
+                $email_array[$row3->user_email] .= "{$row3->region} has a high risk of <a href='http://13.54.13.233/wordpress/index.php/gm-management/'> Grey Mould </a> on the {$rowpm->forecast_day}, {$rowdm->forecast_date}.<br/>";
             }
         }
 
