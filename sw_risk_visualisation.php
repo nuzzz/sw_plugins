@@ -4,46 +4,41 @@ Plugin Name: Smartwinery Risk Visualisation
 Plugin URI: http://www.smartwinery.tk
 Description: Plugin for risk status
 Author: Linus Teo and Tanya Arora
-Version: 2.1
+Version: 3.0
 Author URI:
 */
 
 
-add_action('admin_menu', 'sw_risk_visualisation');
+add_action( 'admin_menu', 'sw_risk_visualisation' );
 
 
-function sw_risk_visualisation()
-{
+function sw_risk_visualisation() {
     //add_options_page( $page_title, $menu_title, $capability, $menu_slug, $function);
-    add_options_page('SW Risk Analysis', 'SW Risk Analysis', 'manage_options', 'SW Risk Analysis', 'sw_risk_status');
+    add_options_page( 'SW Risk Analysis', 'SW Risk Analysis', 'manage_options', 'SW Risk Analysis', 'sw_risk_status' );
 }
 
-add_shortcode("sw_risk_visualisation", "sw_risk_dots");
+add_shortcode( "sw_risk_visualisation", "sw_risk_dots" );
 
 /**
  *  Function to get user meta single value defined field
  *  e.g. get_current_user_meta('region') if such a custom field exists
  * @Returns field value or empty if not found
  */
-function get_current_user_meta($field)
-{
+function get_current_user_meta( $field ) {
     $current_user = wp_get_current_user();
-    $field_value = get_user_meta($current_user->ID, 'region', true);
+    $field_value  = get_user_meta( $current_user->ID, 'region', true );
 
     return $field_value;
 }
 
 
-
-function sw_risk_dots()
-{
+function sw_risk_dots() {
     ob_start();
-    $region = get_current_user_meta('region');
+    $region = get_current_user_meta( 'region' );
 
-echo <<<STYLE
+    echo <<<STYLE
     <style type="text/css">
         .bubble{
-            display: inline-block;
             white-space: nowrap;
             border-radius: 50%;
         }   
@@ -52,6 +47,7 @@ echo <<<STYLE
             position: relative;
             text-decoration: none;
             color: blue;
+            
         }
         
         a.tooltip span{
@@ -60,36 +56,20 @@ echo <<<STYLE
         
         a.tooltip:hover span {
             position: absolute;
+            
+            
             top: 40px;
             display: block;
-            width: 250px;
-            color: black;
-            background-color: #FFFF40;
+            border-radius: 5%;
+            color: #fff;
+            background-color: #534190;
             border: 1px solid black;
             padding: 5px;
             z-index: 10;
+            
+            
         }
         
-        /*.popup*/
-        /*{*/
-            /*visibility: hidden;*/
-            /*white-space: nowrap;*/
-            /*width: auto;*/
-            /*position: relative;*/
-            /*z-index:100;*/
-            /*text-align: Left;*/
-            /*border-radius: 6px;*/
-            /*background-color: #696969;*/
-            /*color: #fff;*/
-            /*padding:3px;*/
-            /*top: 50px;    */
-            /*left: 0px;*/
-        /*}   */
-        /*.bubble:hover .popup {*/
-            /*visibility: visible;*/
-            /*color: blue;*/
-        /*}*/
-       
         .NONE{ 
             width: 25px;
             height: 25px;
@@ -130,55 +110,57 @@ echo <<<STYLE
     </style>
 STYLE;
 
-    if (isset($_POST['submit_btn'])) {
-        if (isset($_POST['area_location']) and isset($_POST['disease'])) {
+    if ( isset( $_POST['submit_btn'] ) ) {
+        if ( isset( $_POST['area_location'] ) and isset( $_POST['disease'] ) ) {
             $area_location = $_POST['area_location'];
-            $disease_name = $_POST['disease'];
+            $disease_name  = $_POST['disease'];
         } else {
             $area_location = '';
-            $disease_name = '';
+            $disease_name  = '';
         }
     } else {
         $area_location = '';
-        $disease_name = '';
+        $disease_name  = '';
     }
 
     //dont display form
-    if (is_user_logged_in() && $region) {
+    if ( is_user_logged_in() && $region ) {
         //render region specific data
         $area_location = $region;
-    }else{
+    } else {
         render_region_disease_selector();
     }
 
     $sql = '';
 
-    if ($area_location === "" and $disease_name === "") {
+    if ( $area_location === "" and $disease_name === "" ) {
         echo "<h3>No region or disease selected.</h3>";
     } else {
 
 
         try {
-            $weatherdb = new wpdb('max4monash', 'max4monash', 'weatherdb', 'max4dbinstance.c2a829wujtim.ap-southeast-2.rds.amazonaws.com');
-        } catch (Exception $e) {
+            $weatherdb = new wpdb( 'max4monash', 'max4monash', 'weatherdb', 'max4dbinstance.c2a829wujtim.ap-southeast-2.rds.amazonaws.com' );
+        } catch ( Exception $e ) {
             echo "<p>Error Connecting</p>";
         }
 
-        draw_disease_visualisation('Downy Mildew', $area_location, $weatherdb);
-        draw_disease_visualisation('Powdery Mildew', $area_location, $weatherdb);
-        draw_disease_visualisation('Grey Mould', $area_location, $weatherdb);
+        draw_disease_visualisation( 'Downy Mildew', $area_location, $weatherdb );
+        draw_disease_visualisation( 'Powdery Mildew', $area_location, $weatherdb );
+        draw_disease_visualisation( 'Grey Mould', $area_location, $weatherdb );
 
         draw_risk_legend();
     }
 
     $output = ob_get_clean();
+
     return $output;
 }
+
 ?>
 
 
 <?php
-function render_region_disease_selector (){
+function render_region_disease_selector() {
     ?>
 
     <form method="post" action="#">
@@ -213,18 +195,19 @@ function render_region_disease_selector (){
     </form>
 
     <br/>
-<?php
+    <?php
 }
+
 ?>
 
 <?php
-function draw_disease_visualisation($disease_name, $area_location, $weatherdb) {
+function draw_disease_visualisation( $disease_name, $area_location, $weatherdb ) {
     $sqlbegin = "SELECT date_format(str_to_date(forecast_date, '%Y-%m-%d'), '%W') as forecast_date,
                    rain_range_min, rain_range_max, CAST(rain_chance*100 as UNSIGNED INT) as rain_chance,
                    air_temp_min, air_temp_max, ";
 
     $sqlmiddle = '';
-    switch($disease_name){
+    switch ( $disease_name ) {
         case "Downy Mildew":
             $sqlmiddle = "downy_mildew_risk AS risk";
             break;
@@ -238,55 +221,57 @@ function draw_disease_visualisation($disease_name, $area_location, $weatherdb) {
 
     $sqlend = " FROM vic_disease_analysis WHERE area_location='$area_location'";
 
-    $sql = $sqlbegin . $sqlmiddle . $sqlend;
-    $result = $weatherdb->get_results($sql);
+    $sql    = $sqlbegin . $sqlmiddle . $sqlend;
+    $result = $weatherdb->get_results( $sql );
     echo "<h3>Does {$area_location} have <i>{$disease_name}</i>?</h3>";
-?>
+    ?>
     <table>
         <tr>
             <th>Date</th>
             <?php
-            if (is_array($result) || is_object($result)) {
-                foreach ($result as $row) {
+            if ( is_array( $result ) || is_object( $result ) ) {
+                foreach ( $result as $row ) {
                     echo "<th>{$row->forecast_date}</th>";
                 }
             }
             echo "</tr>";
             echo "<tr><td>Risk Level</td>";
 
-            if (is_array($result) || is_object($result)) {
-                foreach ($result as $row) {
+            if ( is_array( $result ) || is_object( $result ) ) {
+                foreach ( $result as $row ) {
                     echo "<td>";
                     echo "<a href='#' class='tooltip'>";
-                        echo "<div class='bubble {$row->risk}'>";
-                            echo "<span>";
-                                echo "Risk: {$row->risk}</br>";
-                                echo "rain range: {$row->rain_range_min}mm</br>";
-                                echo "rain_max: {$row->rain_range_max}mm</br>";
-                                echo "rain_chance: {$row->rain_chance}%</br>";
-                                echo "air_temp_min: {$row->air_temp_min}°C</br>";
-                                echo "air_temp_max: {$row->air_temp_max}°C";
-                            echo "</span>";
-                        echo "</div>";
+                    echo "<div class='bubble {$row->risk}'>";
+                    echo "<span>";
+                    echo "Risk: {$row->risk}</br>";
+                    echo "Minimum rain: {$row->rain_range_min}mm</br>";
+                    echo "Maximum rain: {$row->rain_range_max}mm</br>";
+                    echo "Chance of rain: {$row->rain_chance}%</br>";
+                    echo "Minimum temperature: {$row->air_temp_min}°C</br>";
+                    echo "Maximum temperature: {$row->air_temp_max}°C";
+                    echo "</span>";
+                    echo "</div>";
                     echo "</a>";
                     echo "</td>";
                 }
             }
             ?>
     </table>
-<?php
+    <?php
 }
+
 ?>
 
 <?php
-function draw_risk_legend(){
-?>
+function draw_risk_legend() {
+    ?>
     <ul class="legend">
         <li><span class="NONE"></span>NONE - No data to predict disease</li>
         <li><span class="LOW"></span>LOW - Low Risk</li>
         <li><span class="MEDIUM"></span>MEDIUM - Medium Risk</li>
         <li><span class="HIGH"></span> HIGH - High Risk</li>
     </ul>
-<?php
+    <?php
 }
+
 ?>
