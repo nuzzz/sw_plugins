@@ -3,7 +3,7 @@
     Plugin Name: SW_Risk Notify
     Description: Plugin for detecting risk status
     Author: Linus Teo and Tanya Arora
-    Version: 1.0
+    Version: 2.0
     */
 
     add_action('admin_menu', 'sw_admin_actions2');
