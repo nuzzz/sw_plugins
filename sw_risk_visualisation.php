@@ -102,7 +102,7 @@ function sw_risk_dots() {
         .legend span { border: 1px solid #ccc; float: left; width: 12px; height: 12px; margin: 2px; }
         /* your colors */
         .legend .VLOW { background-color: lightgreen; }
-        .legend .LOW { background-color: yellow; }
+        .legend .LOW { background-color: gold; }
         .legend .MEDIUM { background-color: orange; }
         .legend .HIGH { background-color: red; }
 
