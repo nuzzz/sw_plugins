@@ -72,12 +72,12 @@ function sw_risk_dots() {
         .VLOW{ 
             width: 25px;
             height: 25px;
-            background: green;
+            background: lightgreen;
         }
         .LOW{ 
             width: 50px;
             height: 50px;
-            background: yellow;
+            background: gold;
         }
         .MEDIUM{ 
             width: 75px;
@@ -101,7 +101,7 @@ function sw_risk_dots() {
         .legend li { float: left; margin-right: 10px; white-space: nowrap;}
         .legend span { border: 1px solid #ccc; float: left; width: 12px; height: 12px; margin: 2px; }
         /* your colors */
-        .legend .VLOW { background-color: green; }
+        .legend .VLOW { background-color: lightgreen; }
         .legend .LOW { background-color: yellow; }
         .legend .MEDIUM { background-color: orange; }
         .legend .HIGH { background-color: red; }
