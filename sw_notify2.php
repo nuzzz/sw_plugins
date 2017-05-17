@@ -6,16 +6,14 @@ Author: Linus Teo and Tanya Arora
 Version: 2.1
 */
 
-add_action( 'admin_menu', 'sw_admin_actions99' );
+add_action( 'admin_menu', 'sw_notify_medium' );
 
 
-function sw_admin_actions99() {
-
-    add_options_page( 'SW Risk Notify', 'SW Risk Notify', 'manage_options', 'SW Risk Notify' );
-
+function sw_notify_medium() {
+    add_options_page( 'SW Risk Notify Medium', 'SW Risk Notify Medium', 'manage_options', 'SW Risk Notify Medium' );
 }
 
-add_shortcode( "sw_risknotify99", "sw_notify2" );
+add_shortcode( "sw_notify2", "sw_notify2" );
 
 add_action( 'sw_notify_risk_events2', 'sw_notify2' );
 
@@ -53,8 +51,8 @@ function sw_notify2() {
 
         //for each email relating to occurrence
         foreach ( $result1 as $row1 ) {
-            $email_array[ $row1->user_email ] .= "{$row1->region} has a MEDIUM risk of <a href= 'http://13.54.13.233/wordpress/index.php/pm-management/'> Powdery Mildew </a> on {$rowpm->forecast_day}, {$rowpm->forecast_date}.<br/>";
-            }
+            $email_array[ $row1->user_email ] .= "{$row1->region} has a MEDIUM risk of <a href= 'http://54.206.122.93/wordpress/index.php/pm-management/'> Powdery Mildew </a> on {$rowpm->forecast_day}, {$rowpm->forecast_date}.<br/>";
+        }
     }
 
     //Check downy mildew
@@ -73,7 +71,7 @@ function sw_notify2() {
 
         //for each email relating to occurrence
         foreach ( $result2 as $row2 ) {
-            $email_array[ $row2->user_email ] .= "{$row2->region} has a MEDIUM risk of <a href='http://13.54.13.233/wordpress/index.php/dm-management/'> Downy Mildew </a> on {$rowdm->forecast_day}, {$rowdm->forecast_date}.<br/>";
+            $email_array[ $row2->user_email ] .= "{$row2->region} has a MEDIUM risk of <a href='http://54.206.122.93/wordpress/index.php/dm-management/'> Downy Mildew </a> on {$rowdm->forecast_day}, {$rowdm->forecast_date}.<br/>";
         }
     }
 
@@ -93,7 +91,7 @@ function sw_notify2() {
 
         //for each email relating to occurrence
         foreach ( $result3 as $row3 ) {
-            $email_array[ $row3->user_email ] .= "{$row3->region} has a MEDIUM risk of <a href='http://13.54.13.233/wordpress/index.php/gm-management/'> Grey Mould </a> on {$rowgm->forecast_day}, {$rowgm->forecast_date}.<br/>";
+            $email_array[ $row3->user_email ] .= "{$row3->region} has a MEDIUM risk of <a href='http://54.206.122.93/wordpress/index.php/gm-management/'> Grey Mould </a> on {$rowgm->forecast_day}, {$rowgm->forecast_date}.<br/>";
         }
     }
 
@@ -109,10 +107,10 @@ function send_email2( $to, $extratext ) {
 
     $footer = <<<EMAILFOOTER
     <br />
-    Visit <a href="http://www.smartwinery.tk/">www.smartwinery.tk</a> to find more about <a href="http://13.54.13.233/wordpress/index.php/disease-prediction/">
+    Visit <a href="http://www.smartwinery.tk/">www.smartwinery.tk</a> to find more about <a href="http://54.206.122.93/wordpress/index.php/disease-prediction/">
     Disease Analysis </a> and <a href="http://54.206.122.93/wordpress/index.php/diseases-management/"> Disease Management</a>
         
-    <h4>If you no longer wish to receive this type of email, you may unsubscribe <a href="http://13.54.13.233/wordpress/index.php/unsubscribe-user-2/">here</a></h4>
+    <h4>If you no longer wish to receive this type of email, you may unsubscribe <a href="http://54.206.122.93/wordpress/index.php/unsubscribe-user-2/">here</a></h4>
 EMAILFOOTER;
     $body   = $extratext . $footer;
     //    wp_mail($to, $subject, $body, $headers);

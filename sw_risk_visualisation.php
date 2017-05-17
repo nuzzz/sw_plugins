@@ -4,7 +4,7 @@ Plugin Name: Smartwinery Risk Visualisation
 Plugin URI: http://www.smartwinery.tk
 Description: Plugin for risk status
 Author: Linus Teo and Tanya Arora
-Version: 3.0
+Version: 4.0
 Author URI:
 */
 
@@ -37,76 +37,76 @@ function sw_risk_dots() {
     $region = get_current_user_meta( 'region' );
 
     echo <<<STYLE
-    <style type="text/css">
-        div.bubble{
-            display: block;
-            white-space: nowrap;
-            border-radius: 50%;
-            z-index: 1;
-        }   
-        
-        a.tooltip{
-            position: relative;
-            text-decoration: none;
-            color: blue;
-            opacity: 1;
-            z-index: 1;
-        }
-        
-        a.tooltip span{
-            display: none;
-        }
-        
-        a.tooltip:hover span {
-            position: absolute;
-            top: 40px;
-            display: block;
-            border-radius: 5%;
-            color: #fff;
-            background-color: #534190;
-            border: 1px solid black;
-            padding: 5px;
-            z-index: 2;
-        }
-        
-        .VLOW{ 
-            width: 25px;
-            height: 25px;
-            background: lightgreen;
-        }
-        .LOW{ 
-            width: 50px;
-            height: 50px;
-            background: gold;
-        }
-        .MEDIUM{ 
-            width: 75px;
-            height: 75px;
-            background: orange;
-        }
-        .HIGH{ 
-            width: 100px;
-            height: 100px;
-            background: red;
-        }
-        .legend{
-            display: block;
-            width: 50px;
-            height: 50px;
-            margin-right:20px;
-            list-style: none;
-        }
-        
-        /* basic positioning */
-        .legend li { float: left; margin-right: 10px; white-space: nowrap;}
-        .legend span { border: 1px solid #ccc; float: left; width: 12px; height: 12px; margin: 2px; }
-        /* your colors */
-        .legend .VLOW { background-color: lightgreen; }
-        .legend .LOW { background-color: gold; }
-        .legend .MEDIUM { background-color: orange; }
-        .legend .HIGH { background-color: red; }
-
-    </style>
+        <style type="text/css">
+            div.bubble{
+                display: block;
+                white-space: nowrap;
+                border-radius: 50%;
+                z-index: 1;
+            }   
+            
+            a.tooltip{
+                position: relative;
+                text-decoration: none;
+                color: blue;
+                opacity: 1;
+                z-index: 1;
+            }
+            
+            a.tooltip span{
+                display: none;
+            }
+            
+            a.tooltip:hover span {
+                position: absolute;
+                top: 40px;
+                display: block;
+                border-radius: 5%;
+                color: #fff;
+                background-color: #534190;
+                border: 1px solid black;
+                padding: 5px;
+                z-index: 2;
+            }
+            
+            .VLOW{ 
+                width: 25px;
+                height: 25px;
+                background: lightgreen;
+            }
+            .LOW{ 
+                width: 50px;
+                height: 50px;
+                background: gold;
+            }
+            .MEDIUM{ 
+                width: 75px;
+                height: 75px;
+                background: orange;
+            }
+            .HIGH{ 
+                width: 100px;
+                height: 100px;
+                background: red;
+            }
+            .legend{
+                display: block;
+                width: 50px;
+                height: 50px;
+                margin-right:20px;
+                list-style: none;
+            }
+            
+            /* basic positioning */
+            .legend li { float: left; margin-right: 10px; white-space: nowrap;}
+            .legend span { border: 1px solid #ccc; float: left; width: 12px; height: 12px; margin: 2px; }
+            /* your colors */
+            .legend .VLOW { background-color: lightgreen; }
+            .legend .LOW { background-color: gold; }
+            .legend .MEDIUM { background-color: orange; }
+            .legend .HIGH { background-color: red; }
+    
+        </style>
 STYLE;
 
     if ( isset( $_POST['submit_btn'] ) ) {
@@ -148,6 +148,7 @@ STYLE;
     }
     echo "<br/>";
     $output = ob_get_clean();
+
     return $output;
 }
 
@@ -164,25 +165,25 @@ function render_region_disease_selector() {
         <hr/>
 
         <span>
-            <select name="area_location" id="regionddl"" >
-                <option selected disabled> Choose region </option>
-                <option value="Yarra Glen"> Yarra Glen </option>
-                <option value="Ballarat"> Ballarat</option>
-                <option value="Geelong"> Geelong</option>
-                <option value="Stawell"> Stawell</option>
+                <select name="area_location" id="regionddl"" >
+                    <option selected disabled> Choose region </option>
+                    <option value="Yarra Glen"> Yarra Glen </option>
+                    <option value="Ballarat"> Ballarat</option>
+                    <option value="Geelong"> Geelong</option>
+                    <option value="Stawell"> Stawell</option>
             </select >
 
-            </span>
+                </span>
         <span>
 
-            <select name="disease" id="diseasetypeddl">
-                <option selected disabled> Choose disease </option>
-                <option value="Downy Mildew"> Downy Mildew </option>
-                <option value="Powdery Mildew"> Powdery Mildew </option>
-                <option value="Grey Mould"> Grey Mould </option>
-            </select>
+                <select name="disease" id="diseasetypeddl">
+                    <option selected disabled> Choose disease </option>
+                    <option value="Downy Mildew"> Downy Mildew </option>
+                    <option value="Powdery Mildew"> Powdery Mildew </option>
+                    <option value="Grey Mould"> Grey Mould </option>
+                </select>
 
-            </span>
+                </span>
 
         <input style="background-color: #4d4d4d; color: #f2f2f2; width:20em;" type="submit" name="submit_btn"
                value="View Disease Risk"><br/>
@@ -198,8 +199,8 @@ function render_region_disease_selector() {
 <?php
 function draw_disease_visualisation( $disease_name, $area_location, $weatherdb ) {
     $sqlbegin = "SELECT date_format(str_to_date(forecast_date, '%Y-%m-%d'), '%W') as forecast_date,
-                   rain_range_min, rain_range_max, CAST(rain_chance*100 as UNSIGNED INT) as rain_chance,
-                   air_temp_min, air_temp_max, ";
+                       rain_range_min, rain_range_max, CAST(rain_chance*100 as UNSIGNED INT) as rain_chance,
+                       air_temp_min, air_temp_max, ";
 
     $sqlmiddle = '';
     switch ( $disease_name ) {
